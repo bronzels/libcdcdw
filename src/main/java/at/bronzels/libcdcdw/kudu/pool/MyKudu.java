@@ -29,6 +29,8 @@ public class MyKudu implements Serializable {
 
     protected KuduTable kuduTable = null;
 
+    private Map<String, Integer> name2IndexMap;
+
     public MyKudu(String catalog, String kuduUrl, String kuduDatabase, String tableName) {
         this.catalog = catalog;
         this.kuduUrl = kuduUrl;
@@ -52,12 +54,13 @@ public class MyKudu implements Serializable {
         try {
             String name = catalog + Constants.KUDU_TABLE_NAME_AFTER_CATALOG_SEP + kuduDatabase + Constants.KUDU_TABLE_NAME_SEP + tableName;
             kuduTable = kuduClient.openTable(name);
+            name2IndexMap = instantiateName2IndexMap();
         } catch (KuduException e) {
             e.printStackTrace();
         }
     }
 
-    public Map<String, Integer> getName2IndexMap() {
+    public Map<String, Integer> instantiateName2IndexMap() {
         Map<String, Integer> ret = new HashMap<>();
         Schema schema = kuduTable.getSchema();
         List<ColumnSchema> columnSchemaList = schema.getColumns();
@@ -67,6 +70,10 @@ public class MyKudu implements Serializable {
             ret.put(name, schema.getColumnIndex(name));
         }
         return ret;
+    }
+
+    public Map<String, Integer> getName2IndexMap() {
+        return name2IndexMap;
     }
 
     public KuduTable getKuduTable() {
