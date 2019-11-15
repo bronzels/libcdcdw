@@ -51,7 +51,7 @@ public class CommonCli {
             return false;
     }
 
-    public List<String> getNonArgRemoved(List<String> input, String... optionStrs) {
+    static public List<String> getNonArgRemoved(List<String> input, String... optionStrs) {
         List<String> ret = new ArrayList<>(input);
         for(String option: optionStrs) {
             if(input.contains(option)) {
@@ -64,7 +64,7 @@ public class CommonCli {
         return ret;
     }
 
-    public List<String> getArgRemoved(List<String> input, String... optionStrs) {
+    static public List<String> getArgRemoved(List<String> input, String... optionStrs) {
         List<String> ret = new ArrayList<>(input);
         for(String option: optionStrs) {
             if(input.contains(option)) {

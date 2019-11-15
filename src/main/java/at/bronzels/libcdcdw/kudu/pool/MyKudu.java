@@ -88,7 +88,7 @@ public class MyKudu implements Serializable {
         return kuduClient;
     }
 
-    protected void applyOp(Operation op) {
+    public void applyOp(Operation op) {
         try {
             OperationResponse operationResponse = kuduSession.apply(op);
             LOG.info("operationResponse:{}", operationResponse);
@@ -104,6 +104,11 @@ public class MyKudu implements Serializable {
 
     public void put(Map<Integer, Object> valueMap) {
         Operation op = KuduOperation.getOperation(OperationType.UPDATE, kuduTable, valueMap, null);
+        applyOp(op);
+    }
+
+    public void delete(Map<Integer, Object> valueMap) {
+        Operation op = KuduOperation.getOperation(OperationType.DELETE, kuduTable, valueMap, null);
         applyOp(op);
     }
 
