@@ -2,6 +2,11 @@ package at.bronzels.libcdcdw;
 
 import org.apache.commons.cli.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 public class CommonCli {
     public CommandLine getCommandLine(Options options, String[] args) {
         CommandLineParser parser = new DefaultParser();
@@ -20,13 +25,58 @@ public class CommonCli {
         return comm;
     }
 
-    public boolean askHelp(CommandLine comm, Options options) {
-        if (!comm.hasOption("h")) {
+    public Options buildOptions() {
+        Options options = new Options();
+        //短选项，长选项，选项后是否有参数，描述
+        //帮助
+        Option option;
+
+        //destTable
+        option = new Option("h", "help", false, "list commandline usage of this app");
+        options.addOption(option);
+
+        return options;
+    }
+
+    public boolean parseIsHelp(Options options, String[] args) {
+        CommandLine comm = getCommandLine(options, args);
+
+        if (comm.hasOption("h")) {
             HelpFormatter hf = new HelpFormatter();
             hf.setWidth(110);
-            hf.printHelp("usage", options, true);
+            hf.printHelp("pls input as ", options, true);
             return true;
-        } else return false;
+        }
+        else
+            return false;
+    }
+
+    public List<String> getNonArgRemoved(List<String> input, String... optionStrs) {
+        List<String> ret = new ArrayList<>(input);
+        for(String option: optionStrs) {
+            if(input.contains(option)) {
+                ret.set(input.indexOf(option), null);
+            }
+        }
+        ret = ret.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        return ret;
+    }
+
+    public List<String> getArgRemoved(List<String> input, String... optionStrs) {
+        List<String> ret = new ArrayList<>(input);
+        for(String option: optionStrs) {
+            if(input.contains(option)) {
+                int indexOp = input.indexOf(option);
+                ret.set(indexOp, null);
+                ret.set(indexOp+1, null);
+            }
+        }
+        ret = ret.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        return ret;
     }
 
 
