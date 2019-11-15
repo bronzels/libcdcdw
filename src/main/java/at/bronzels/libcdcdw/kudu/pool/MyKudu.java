@@ -60,7 +60,7 @@ public class MyKudu implements Serializable {
         }
     }
 
-    public Map<String, Integer> instantiateName2IndexMap() {
+    private Map<String, Integer> instantiateName2IndexMap() {
         Map<String, Integer> ret = new HashMap<>();
         Schema schema = kuduTable.getSchema();
         List<ColumnSchema> columnSchemaList = schema.getColumns();
