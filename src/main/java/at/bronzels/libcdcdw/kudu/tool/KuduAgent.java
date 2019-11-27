@@ -312,7 +312,7 @@ public class KuduAgent {
      * @return
      * @throws KuduException
      */
-    private AlterTableResponse alterColumn(KuduClient client, KuduRow entity) throws KuduException {
+    public AlterTableResponse alterColumn(KuduClient client, KuduRow entity) throws KuduException {
         AlterTableOptions ato = new AlterTableOptions();
         for (KuduColumn column : entity.getRows()) {
             if (column.getAlterColumnEnum().equals(KuduColumn.AlterColumnEnum.ADD_COLUMN) && !column.isNullAble()) {

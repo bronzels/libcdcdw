@@ -72,36 +72,39 @@ public class KuduAgentUtils {
         Map<String, Object> result = new HashMap<>();
         for (KuduColumn entity : entitys) {
             if (entity.getColumnType() != null) {
+                String colName = entity.getColumnName();
+                if(row.isNull(colName))
+                    continue;
                 switch (entity.getColumnType()) {
                     case BOOL:
-                        result.put(entity.getColumnName(), row.getBoolean(entity.getColumnName()));
+                        result.put(colName, row.getBoolean(colName));
                         break;
                     case BINARY:
-                        result.put(entity.getColumnName(), row.getBinary(entity.getColumnName()));
+                        result.put(colName, row.getBinary(colName));
                         break;
                     case STRING:
-                        result.put(entity.getColumnName(), row.getString(entity.getColumnName()));
+                        result.put(colName, row.getString(colName));
                         break;
                     case INT8:
-                        result.put(entity.getColumnName(), row.getByte(entity.getColumnName()));
+                        result.put(colName, row.getByte(colName));
                         break;
                     case INT16:
-                        result.put(entity.getColumnName(), row.getShort(entity.getColumnName()));
+                        result.put(colName, row.getShort(colName));
                         break;
                     case INT32:
-                        result.put(entity.getColumnName(), row.getInt(entity.getColumnName()));
+                        result.put(colName, row.getInt(colName));
                         break;
                     case INT64:
-                        result.put(entity.getColumnName(), row.getLong(entity.getColumnName()));
+                        result.put(colName, row.getLong(colName));
                         break;
                     case DOUBLE:
-                        result.put(entity.getColumnName(), row.getDouble(entity.getColumnName()));
+                        result.put(colName, row.getDouble(colName));
                         break;
                     case FLOAT:
-                        result.put(entity.getColumnName(), row.getFloat(entity.getColumnName()));
+                        result.put(colName, row.getFloat(colName));
                         break;
                     case UNIXTIME_MICROS:
-                        result.put(entity.getColumnName(), row.getLong(entity.getColumnName()));
+                        result.put(colName, row.getLong(colName));
                         break;
                 }
             }
@@ -228,6 +231,7 @@ public class KuduAgentUtils {
                 e.printStackTrace();
             }
         }
+        /*
         if (null != client) {
             try {
                 client.close();
@@ -235,6 +239,7 @@ public class KuduAgentUtils {
                 e.printStackTrace();
             }
         }
+         */
     }
 
 

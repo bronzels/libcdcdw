@@ -14,14 +14,14 @@ public class MyBsonKudu extends MyKudu{
         super(catalog, kuduUrl, kuduDatabase, tableName);
     }
 
-    public void put(BsonDocument valueDoc, boolean isSrcFieldNameWTUpperCase) {
+    public String put(BsonDocument valueDoc, boolean isSrcFieldNameWTUpperCase) {
         Operation op = KuduOperation.getOperation(OperationType.UPDATE, kuduTable, valueDoc, isSrcFieldNameWTUpperCase);
-        applyOp(op);
+        return "put, " + applyOp(op);
     }
 
-    public void delete(BsonDocument valueDoc, boolean isSrcFieldNameWTUpperCase) {
+    public String delete(BsonDocument valueDoc, boolean isSrcFieldNameWTUpperCase) {
         Operation op = KuduOperation.getOperation(OperationType.DELETE, kuduTable, valueDoc, isSrcFieldNameWTUpperCase);
-        applyOp(op);
+        return "delete, " + applyOp(op);
     }
 
 }

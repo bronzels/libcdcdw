@@ -1,0 +1,51 @@
+package at.bronzels.libcdcdw;
+
+import org.apache.curator.RetryPolicy;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.recipes.locks.InterProcessLock;
+import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
+import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.curator.utils.CloseableUtils;
+
+public class DistLockZookeeper extends DistLock {
+    private String connectString;
+    // Curator 客户端重试策略
+    private RetryPolicy retry;
+    // Curator 客户端对象
+    private CuratorFramework client;
+
+    public DistLockZookeeper(String lockUrl, String lockPath) {
+        super(lockUrl, lockPath);
+        this.lockPath = "/" + this.lockPath;
+    }
+
+    public void open() {
+        retry = new ExponentialBackoffRetry(1000, 3);
+        // 创建一个客户端, 60000(ms)为 session 超时时间, 15000(ms)为链接超时时间
+        client = CuratorFrameworkFactory.newClient(lockUrl, 60000, 15000, retry);
+    }
+
+    public void close() {
+        CloseableUtils.closeQuietly(client);
+    }
+
+    public void acquire() {
+        InterProcessLock lock = new InterProcessSemaphoreMutex(client, lockPath);
+        try {
+            lock.acquire();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void release() {
+        InterProcessLock lock = new InterProcessSemaphoreMutex(client, lockPath);
+        try {
+            lock.release();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}

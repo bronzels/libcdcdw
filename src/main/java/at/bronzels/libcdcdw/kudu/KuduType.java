@@ -7,5 +7,4 @@ public class KuduType {
     static public Type getColumnType(KuduTable kuduTable, String fieldName) {
         return kuduTable.getSchema().getColumn(fieldName).getType();
     }
-
 }

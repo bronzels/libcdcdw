@@ -4,7 +4,9 @@ import org.bson.BsonDocument;
 import org.bson.BsonValue;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class MyBson {
@@ -44,6 +46,14 @@ public class MyBson {
             for(String key: doc.keySet()) {
                 ret.put(key, doc.get(key));
             }
+        }
+        return ret;
+    }
+
+    static public Map<String, Object> getMap(BsonDocument doc) {
+        Map<String, Object> ret = new HashMap<>();
+        for(String key: doc.keySet()) {
+            ret.put(key, getJavaObjFrom(key, doc.get(key)));
         }
         return ret;
     }
