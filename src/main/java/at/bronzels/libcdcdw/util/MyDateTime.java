@@ -32,6 +32,25 @@ public class MyDateTime {
         }
     }
 
+    /*
+    static public Long date2TimeStampLong(String dateString) {
+        org.joda.time.DateTime jodaDateTime = new org.joda.time.DateTime(dateString);
+        Long ret = jodaDateTime.getMillis();
+        return ret;
+
+        Long ret = null;
+        try {
+            com.strategicgains.util.date.DateAdapter adapter = new com.strategicgains.util.date.DateAdapter();
+            Date date = adapter.parse(dateString);
+            ret = date.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return ret;
+        }
+    }
+     */
+
     static public String timeStamp2Date(String timestampString, String formatString) {
         String ret = null;
         try {
