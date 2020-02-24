@@ -67,63 +67,37 @@ public class MyKudu implements Serializable {
     }
 
     public MyKudu(String catalog, String kuduUrl, String kuduDatabase, String tableName, DistLockConf distLockConf) {
-        this.catalog = catalog;
-        this.kuduUrl = kuduUrl;
-        this.kuduDatabase = kuduDatabase;
-        this.tableName = tableName;
+        this(catalog, kuduUrl, kuduDatabase, tableName);
         this.distLockConf = distLockConf;
     }
 
     public MyKudu(boolean isSrcFieldNameWTUpperCase, String catalog, String kuduUrl, String kuduDatabase, String tableName) {
+        this(catalog, kuduUrl, kuduDatabase, tableName);
         this.isSrcFieldNameWTUpperCase = isSrcFieldNameWTUpperCase;
-        this.catalog = catalog;
-        this.kuduUrl = kuduUrl;
-        this.kuduDatabase = kuduDatabase;
-        this.tableName = tableName;
     }
 
     public MyKudu(boolean isSrcFieldNameWTUpperCase, String catalog, String kuduUrl, String kuduDatabase, String tableName, DistLockConf distLockConf) {
-        this.isSrcFieldNameWTUpperCase = isSrcFieldNameWTUpperCase;
-        this.catalog = catalog;
-        this.kuduUrl = kuduUrl;
-        this.kuduDatabase = kuduDatabase;
-        this.tableName = tableName;
+        this(isSrcFieldNameWTUpperCase, catalog, kuduUrl, kuduDatabase, tableName);
         this.distLockConf = distLockConf;
     }
 
     public MyKudu(String catalog, String kuduUrl, String kuduDatabase, String tableName, boolean isInAutoMode) {
-        this.catalog = catalog;
-        this.kuduUrl = kuduUrl;
-        this.kuduDatabase = kuduDatabase;
-        this.tableName = tableName;
+        this(catalog, kuduUrl, kuduDatabase, tableName);
         this.isInAutoMode = isInAutoMode;
     }
 
     public MyKudu(String catalog, String kuduUrl, String kuduDatabase, String tableName, boolean isInAutoMode, DistLockConf distLockConf) {
-        this.catalog = catalog;
-        this.kuduUrl = kuduUrl;
-        this.kuduDatabase = kuduDatabase;
-        this.tableName = tableName;
-        this.isInAutoMode = isInAutoMode;
+        this(catalog, kuduUrl, kuduDatabase, tableName, isInAutoMode);
         this.distLockConf = distLockConf;
     }
 
     public MyKudu(boolean isSrcFieldNameWTUpperCase, String catalog, String kuduUrl, String kuduDatabase, String tableName, boolean isInAutoMode) {
+        this(catalog, kuduUrl, kuduDatabase, tableName, isInAutoMode);
         this.isSrcFieldNameWTUpperCase = isSrcFieldNameWTUpperCase;
-        this.catalog = catalog;
-        this.kuduUrl = kuduUrl;
-        this.kuduDatabase = kuduDatabase;
-        this.tableName = tableName;
-        this.isInAutoMode = isInAutoMode;
     }
 
     public MyKudu(boolean isSrcFieldNameWTUpperCase, String catalog, String kuduUrl, String kuduDatabase, String tableName, boolean isInAutoMode, DistLockConf distLockConf) {
-        this.isSrcFieldNameWTUpperCase = isSrcFieldNameWTUpperCase;
-        this.catalog = catalog;
-        this.kuduUrl = kuduUrl;
-        this.kuduDatabase = kuduDatabase;
-        this.tableName = tableName;
-        this.isInAutoMode = isInAutoMode;
+        this(isSrcFieldNameWTUpperCase, catalog, kuduUrl, kuduDatabase, tableName, isInAutoMode);
         this.distLockConf = distLockConf;
     }
 
@@ -543,4 +517,11 @@ public class MyKudu implements Serializable {
         return ret.toString();
     }
 
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
 }

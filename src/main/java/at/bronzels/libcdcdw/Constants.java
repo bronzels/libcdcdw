@@ -16,4 +16,7 @@ public interface Constants {
     String KUDU_TABLE_NAME_SEP = ".";
 
     String RK_4_MONGODB_AND_OTHER_DBS_ID_FIELD_NAME = "_id";
+
+    String defaultTimestampFormatStr = "yyyy-MM-dd hh:mm:ss";
+
 }

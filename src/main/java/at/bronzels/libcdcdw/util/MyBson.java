@@ -3,6 +3,7 @@ package at.bronzels.libcdcdw.util;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,10 @@ public class MyBson {
             ret = value.asString().getValue();
         else if (value.isTimestamp())
             ret = new Timestamp(value.asTimestamp().getValue());
+        else if (value.isDateTime())
+            ret = new Timestamp(value.asDateTime().getValue());
+        else if (value.isDecimal128())
+            ret = value.asDecimal128().getValue().bigDecimalValue().setScale(18, BigDecimal.ROUND_DOWN);
         else
             throw new RuntimeException("error: value data type is not supported, key:" + key + ", value:" + value.toString());
         return ret;
