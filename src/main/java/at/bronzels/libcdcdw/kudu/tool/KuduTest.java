@@ -1,10 +1,11 @@
 package at.bronzels.libcdcdw.kudu.tool;
 
+import org.apache.kudu.ColumnSchema;
+import org.apache.kudu.Schema;
 import org.apache.kudu.Type;
-import org.apache.kudu.client.KuduClient;
-import org.apache.kudu.client.KuduException;
-import org.apache.kudu.client.KuduPredicate;
+import org.apache.kudu.client.*;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +23,45 @@ public class KuduTest {
 //        renameTEST();
 //        alterColumnTEST();
         client = new KuduClient.KuduClientBuilder("beta-hbase01:7051").defaultAdminOperationTimeoutMs(600000).build();
-        selectTest();
-        client.close();
+        //selectTest();
+        //kuduCreateTableTest();
+        insertSingleTEST1();
+        //client.close();
+    }
+
+    public static void kuduCreateTableTest(){
+        try {
+            List<ColumnSchema> columns = new ArrayList(2);
+            columns.add(new ColumnSchema.ColumnSchemaBuilder("key", Type.STRING)
+                    .key(true)
+                    .build());
+            columns.add(new ColumnSchema.ColumnSchemaBuilder("value", Type.UNIXTIME_MICROS)
+                    .build());
+            List<String> rangeKeys = new ArrayList<>();
+            rangeKeys.add("key");
+            Schema schema = new Schema(columns);
+            client.createTable("presto::jsd.kudu_micros_test", schema,
+                    new CreateTableOptions().setRangePartitionColumns(rangeKeys));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                client.shutdown();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void insertSingleTEST1() throws KuduException {
+        KuduTable table = client.openTable("presto::jsd.kudu_micros_test");
+        KuduSession session = client.newSession();
+        Insert insert = table.newInsert();
+        PartialRow row = insert.getRow();
+        row.addString(0, 3+"");
+        //row.addObject(0, "2019-09-27 23:55:00.11");
+        row.addTimestamp(1, new Timestamp(0L));
+        OperationResponse operationResponse =  session.apply(insert);
     }
 
     public static void selectTest() {
