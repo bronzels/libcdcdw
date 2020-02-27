@@ -49,6 +49,8 @@ public class MyKudu implements Serializable {
     private Set<String> colNameSet;
     private Map<String, Type> name2TypeMap;
 
+    private Map<Integer, Type> index2TypeMap;
+
     private Integer dwsynctsFieldIndex = null;
 
     private Set<String> primaryKeyNameSet;
@@ -120,10 +122,11 @@ public class MyKudu implements Serializable {
             strFullTableName = catalog + Constants.KUDU_TABLE_NAME_AFTER_CATALOG_SEP + kuduDatabase + Constants.KUDU_TABLE_NAME_SEP + tableName;
 
             kuduTable = kuduClient.openTable(strFullTableName);
-            io.vavr.Tuple3<Map<String, Integer>, Map<String, Type>, Set<String>> tuple3 = instantiateName2IndexTypeMapPrimaryKeySetTuple();
-            name2IndexMap = tuple3._1;
-            name2TypeMap = tuple3._2;
-            primaryKeyNameSet = tuple3._3;
+            io.vavr.Tuple4<Map<String, Integer>, Map<String, Type>, Map<Integer, Type>, Set<String>> tuple4 = instantiateName2IndexTypeMapPrimaryKeySetTuple();
+            name2IndexMap = tuple4._1;
+            name2TypeMap = tuple4._2;
+            index2TypeMap = tuple4._3;
+            primaryKeyNameSet = tuple4._4;
             primaryKeyIndexSet = primaryKeyNameSet.stream()
                     .map(name2IndexMap::get)
                     .collect(Collectors.toSet());
@@ -173,9 +176,10 @@ public class MyKudu implements Serializable {
         else return input;
     }
 
-    private io.vavr.Tuple3<Map<String, Integer>, Map<String, Type>, Set<String>> instantiateName2IndexTypeMapPrimaryKeySetTuple() {
+    private io.vavr.Tuple4<Map<String, Integer>, Map<String, Type>, Map<Integer, Type>, Set<String>> instantiateName2IndexTypeMapPrimaryKeySetTuple() {
         Map<String, Integer> indexMap = new HashMap<>();
         Map<String, Type> typeMap = new HashMap<>();
+        Map<Integer, Type> indexTypeMap = new HashMap<>();
         Set<String> primaryKeySet = new HashSet<>();
         Schema schema = kuduTable.getSchema();
         List<ColumnSchema> columnSchemaList = schema.getColumns();
@@ -188,8 +192,9 @@ public class MyKudu implements Serializable {
             Type type = columnSchema.getType();
             indexMap.put(name, schema.getColumnIndex(name));
             typeMap.put(name, type);
+            indexTypeMap.put(schema.getColumnIndex(name), type);
         }
-        return new io.vavr.Tuple3<Map<String, Integer>, Map<String, Type>, Set<String>>(indexMap, typeMap, primaryKeySet);
+        return new io.vavr.Tuple4<Map<String, Integer>, Map<String, Type>, Map<Integer, Type>, Set<String>>(indexMap, typeMap, indexTypeMap, primaryKeySet);
     }
 
     public Map<String, Integer> getName2IndexMap() {
@@ -301,6 +306,11 @@ public class MyKudu implements Serializable {
         }
     }
 
+    private void checkWithValueDataType(Map<Integer, Object> valueMap){
+        valueMap.forEach((index, type) -> {
+
+        });
+    }
 
     private void checkWithPrimaryKeysByIndex(Map<Integer, Object> valueMap) {
         if (intersect(valueMap.keySet(), primaryKeyIndexSet).size() != primaryKeyIndexSet.size())
@@ -348,6 +358,8 @@ public class MyKudu implements Serializable {
         Operation op = KuduOperation.getOperation(OperationType.UPDATE, kuduTable, valueMap, null);
         return "put, " + applyOp(op);
     }
+
+
 
     public String incr(Map<String, Object> inputKeyMap, Map<String, Object> inputValueMap) {
         Map<String, Object> keyMap = getMyLowerCasedMap(inputKeyMap);
@@ -498,6 +510,7 @@ public class MyKudu implements Serializable {
                 PartialRow row = operation.getRow();
                 if (finalTsIndex != null) {
                     long currmilli = Instant.now().toEpochMilli();
+                    //row.addLong(dwsynctsFieldIndex, currmilli);
                     row.addObject(dwsynctsFieldIndex, currmilli);
                 }
                 KuduOperation.haveRowAddedBy(row, putMap, myKudu.isSrcFieldNameWTUpperCase);
