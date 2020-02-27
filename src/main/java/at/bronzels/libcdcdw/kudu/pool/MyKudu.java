@@ -221,6 +221,10 @@ public class MyKudu implements Serializable {
         return kuduClient;
     }
 
+    public String getStrFullTableName() {
+        return strFullTableName;
+    }
+
     public String applyOp(Operation op) {
         String ret = "success";
         try {
