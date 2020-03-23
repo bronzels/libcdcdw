@@ -41,12 +41,6 @@
 
     <properties>
         <mongodb.driver.version>3.10.1</mongodb.driver.version>
-        <logback.version>1.2.3</logback.version>
-        <junit.jupiter.version>5.4.1</junit.jupiter.version>
-        <junit.vintage.version>5.4.1</junit.vintage.version>
-        <junit.platform.version>1.4.1</junit.platform.version>
-        <mockito.version>2.25.1</mockito.version>
-        <hamcrest.version>2.0.0.0</hamcrest.version>
 <!--
         <jackson.version>2.9.8</jackson.version>
         <avro.version>1.8.2</avro.version>
@@ -73,7 +67,24 @@
         <kudu-version>1.10.0</kudu-version>
         <slf4j.version>1.7.28</slf4j.version>
         <log4j.version>2.12.1</log4j.version>
+
+        <kafka.version>2.0.1</kafka.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <name>nexus</name>
+            <url>http://pro-hbase01:8081/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+
+    </repositories>
 
     <dependencies>
         <!--
@@ -182,6 +193,11 @@
             <version>0.11</version>
         </dependency>
 -->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_2.11</artifactId>
+            <version>${kafka.version}</version>
+        </dependency>
 
     </dependencies>
 
@@ -339,8 +355,6 @@
             </resource>
         </resources>
     </build>
-    <repositories>
-    </repositories>
 
     <distributionManagement>
         <repository>
