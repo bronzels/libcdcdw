@@ -358,14 +358,14 @@
 
     <distributionManagement>
         <repository>
-            <id>releases</id>
-            <name>Internal Releases</name>
-            <url>http://pro-hbase01:8081/nexus/content/repositories/releases</url>
+            <id>maven-releases</id>
+            <name>maven-releases-repository</name>
+            <url>http://pro-hbase01:8081/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
-            <id>snapshots</id>
-            <name>Internal Snapshots</name>
-            <url>http://pro-hbase01:8081/nexus/content/repositories/snapshots</url>
+            <id>maven-snapshots</id>
+            <name>maven-snapshots-repository</name>
+            <url>http://pro-hbase01:8081/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
