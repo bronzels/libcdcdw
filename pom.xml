@@ -75,7 +75,7 @@
         <repository>
             <id>nexus</id>
             <name>nexus</name>
-            <url>http://pro-hbase01:8081/nexus/content/groups/public/</url>
+            <url>http://pro-hbase01:8081/repository/maven-public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
