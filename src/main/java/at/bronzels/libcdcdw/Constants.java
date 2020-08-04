@@ -18,5 +18,6 @@ public interface Constants {
     String RK_4_MONGODB_AND_OTHER_DBS_ID_FIELD_NAME = "_id";
 
     String defaultTimestampFormatStr = "yyyy-MM-dd hh:mm:ss";
+    String defaultTimestampFormatBatchMongoStr = "yyyy-MM-dd hh:mm:ss.SSS";
 
 }

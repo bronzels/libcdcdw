@@ -1,5 +1,6 @@
 package at.bronzels.libcdcdw.util;
 
+import at.bronzels.libcdcdw.Constants;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import java.sql.Timestamp;
@@ -26,7 +27,7 @@ public class MyBson {
         else if (value.isTimestamp())
             ret = new Timestamp(value.asTimestamp().getValue());
         else if (value.isDateTime())
-            ret = value.asDateTime().toString();
+            ret = MyDateTime.timeStampLong2Date(value.asDateTime().getValue(), Constants.defaultTimestampFormatBatchMongoStr);
         else if (value.isDecimal128())
             ret = value.asDecimal128().getValue().doubleValue();
         else if (value.isObjectId())
