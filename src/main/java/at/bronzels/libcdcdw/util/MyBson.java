@@ -29,6 +29,8 @@ public class MyBson {
             ret = new Timestamp(value.asDateTime().getValue());
         else if (value.isDecimal128())
             ret = value.asDecimal128().getValue().doubleValue();
+        else if (value.isObjectId())
+            ret = value.asObjectId().getValue().toString();
         else
             throw new RuntimeException("error: value data type is not supported, key:" + key + ", value:" + value.toString());
         return ret;
