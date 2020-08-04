@@ -27,7 +27,7 @@ public class MyBson {
         else if (value.isTimestamp())
             ret = new Timestamp(value.asTimestamp().getValue());
         else if (value.isDateTime())
-            ret = MyDateTime.timeStampLong2Date(value.asDateTime().getValue(), Constants.defaultTimestampFormatBatchMongoStr);
+            ret = MyDateTime.timeStampLong2Date(value.asDateTime().getValue(), Constants.defaultTimestampFormatMSStr);
         else if (value.isDecimal128())
             ret = value.asDecimal128().getValue().doubleValue();
         else if (value.isObjectId())
