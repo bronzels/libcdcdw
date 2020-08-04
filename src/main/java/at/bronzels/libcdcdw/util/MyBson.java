@@ -26,7 +26,7 @@ public class MyBson {
         else if (value.isTimestamp())
             ret = new Timestamp(value.asTimestamp().getValue());
         else if (value.isDateTime())
-            ret = new Timestamp(value.asDateTime().getValue());
+            ret = value.asDateTime().toString();
         else if (value.isDecimal128())
             ret = value.asDecimal128().getValue().doubleValue();
         else if (value.isObjectId())
