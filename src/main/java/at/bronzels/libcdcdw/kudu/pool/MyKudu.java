@@ -289,7 +289,9 @@ public class MyKudu implements Serializable {
 
         boolean stillNeeded = true;
         try {
-            distLock.acquire();
+            do {
+                distLock.acquire();
+            }while(Thread.currentThread().isInterrupted());
             closeDB();
             openDB();
             if (colNameSet.containsAll(inputColName2TypeMap.keySet()))
