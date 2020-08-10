@@ -14,8 +14,16 @@ public abstract class DistLock {
 
     abstract public void close();
 
-    abstract public void acquire();
+    abstract public void acquire(String subPath);
 
-    abstract public void release();
+    abstract public void release(String subPath);
+
+    public void acquire() {
+        acquire(null);
+    }
+
+    public void release() {
+        release(null);
+    }
 
 }

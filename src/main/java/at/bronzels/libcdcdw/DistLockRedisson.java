@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DistLockRedisson extends DistLock {
     RedissonClient redisson;
+    RLock lock = null;
 
     public DistLockRedisson(String lockUrl, String lockPath) {
         super(lockUrl, lockPath);
@@ -31,13 +32,21 @@ public class DistLockRedisson extends DistLock {
             redisson.shutdown();
     }
 
-    public void acquire() {
-        RLock lock = redisson.getLock(lockPath);
-        lock.lock(1L, TimeUnit.MINUTES);
+    public void acquire(String subPath) {
+        boolean isLock = false;
+        while(!isLock) {
+            lock = redisson.getLock(subPath == null ? lockPath : (lockPath + ":" + subPath));
+            try {
+                isLock = lock.tryLock(5, 5, TimeUnit.SECONDS);
+            } catch (Exception e) {
+            } finally {
+                if(!isLock && lock.isLocked() && lock.isHeldByCurrentThread())
+                    lock.unlock();
+            }
+        }
     }
 
-    public void release() {
-        RLock lock = redisson.getLock(lockPath);
+    public void release(String subPath) {
         lock.unlock();
     }
 

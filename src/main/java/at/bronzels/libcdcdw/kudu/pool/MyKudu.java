@@ -271,23 +271,61 @@ public class MyKudu implements Serializable {
 
     public void addColumns(Map<String, Type> inputColName2TypeMap) {
         Map<String, Type> colName2TypeMap = getMyLowerCasedMap(inputColName2TypeMap);
+        Set<String> newColSet = colName2TypeMap.keySet();
 
-        if (intersect(colName2TypeMap.keySet(), primaryKeyNameSet).size() > 0)
+        if (intersect(newColSet, primaryKeyNameSet).size() > 0)
             throw new RuntimeException("overlapped with primary keys");
         KuduAgent agent = new KuduAgent();
-        KuduRow myrows = new KuduRow();
-        myrows.setTableName(strFullTableName);
-        List<KuduColumn> columnList = new ArrayList<>();
         for (Map.Entry<String, Type> entry : colName2TypeMap.entrySet()) {
             KuduColumn newcolumn = new KuduColumn();
             newcolumn.setColumnName(entry.getKey()).setAlterColumnEnum(KuduColumn.AlterColumnEnum.ADD_COLUMN).setNullAble(true).setColumnType(entry.getValue());
+            KuduRow myrow = new KuduRow();
+            myrow.setTableName(strFullTableName);
+            List<KuduColumn> columnList = new ArrayList<>();
             columnList.add(newcolumn);
+            myrow.setRows(columnList);
+            try {
+                distLock.acquire();
+                AlterTableResponse alterTableResponse = agent.alterColumn(kuduClient, myrow);
+                distLock.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+                LOG.error("kudu执行表alter操作失败，失败信息:cause-->{},message-->{}, name:{}, type:{}", e.getCause(), e.getMessage(), entry.getKey(), entry.getValue());
+            } finally {
+            }
         }
-        myrows.setRows(columnList);
+        closeDB();
+        openDB();
+        if (!colNameSet.containsAll(newColSet))
+            throw new RuntimeException(String.format("new cols %s not added to schema", newColSet.toString()));
+        /*
         List<KuduRow> list = new ArrayList<>();
         list.add(myrows);
+        */
 
-        boolean stillNeeded = true;
+        /*
+        try {
+            distLock.acquire();
+            closeDB();
+            openDB();
+            if (colNameSet.containsAll(inputColName2TypeMap.keySet()))
+                stillNeeded = false;
+            if (stillNeeded) {
+                for (KuduRow entity : list) {
+                    AlterTableResponse alterTableResponse = agent.alterColumn(kuduClient, entity);
+                }
+                closeDB();
+                openDB();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOG.error("kudu执行表alter操作失败，失败信息:cause-->{},message-->{}", e.getCause(), e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        } finally {
+            distLock.release();
+        }
+        */
+        /*
         try {
             do {
                 distLock.acquire();
@@ -310,6 +348,27 @@ public class MyKudu implements Serializable {
         } finally {
             distLock.release();
         }
+        */
+        /*
+        closeDB();
+        openDB();
+        if (colNameSet.containsAll(inputColName2TypeMap.keySet()))
+            stillNeeded = false;
+        if (stillNeeded) {
+            for (KuduRow entity : list) {
+                try {
+                    AlterTableResponse alterTableResponse = agent.alterColumn(kuduClient, entity);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    LOG.error("kudu执行表alter操作失败，失败信息:cause-->{},message-->{}", e.getCause(), e.getMessage());
+                    throw new RuntimeException(e.getMessage());
+                } finally {
+                }
+            }
+            closeDB();
+            openDB();
+        }
+        */
     }
 
     private void checkWithValueDataType(Map<Integer, Object> valueMap){
