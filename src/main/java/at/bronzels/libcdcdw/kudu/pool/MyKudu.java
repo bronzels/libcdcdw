@@ -277,8 +277,9 @@ public class MyKudu implements Serializable {
             throw new RuntimeException("overlapped with primary keys");
         KuduAgent agent = new KuduAgent();
         for (Map.Entry<String, Type> entry : colName2TypeMap.entrySet()) {
+            String colName = entry.getKey();
             KuduColumn newcolumn = new KuduColumn();
-            newcolumn.setColumnName(entry.getKey()).setAlterColumnEnum(KuduColumn.AlterColumnEnum.ADD_COLUMN).setNullAble(true).setColumnType(entry.getValue());
+            newcolumn.setColumnName(colName).setAlterColumnEnum(KuduColumn.AlterColumnEnum.ADD_COLUMN).setNullAble(true).setColumnType(entry.getValue());
             KuduRow myrow = new KuduRow();
             myrow.setTableName(strFullTableName);
             List<KuduColumn> columnList = new ArrayList<>();
@@ -286,8 +287,10 @@ public class MyKudu implements Serializable {
             myrow.setRows(columnList);
             try {
                 distLock.acquire();
+                //distLock.acquire(colName);
                 AlterTableResponse alterTableResponse = agent.alterColumn(kuduClient, myrow);
                 distLock.release();
+                //distLock.release(colName);
             } catch (Exception e) {
                 e.printStackTrace();
                 LOG.error("kudu执行表alter操作失败，失败信息:cause-->{},message-->{}, name:{}, type:{}", e.getCause(), e.getMessage(), entry.getKey(), entry.getValue());
