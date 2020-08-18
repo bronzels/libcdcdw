@@ -47,7 +47,8 @@ public class DistLockRedisson extends DistLock {
     }
 
     public void release(String subPath) {
-        lock.unlock();
+        if(lock.isLocked() && lock.isHeldByCurrentThread())
+            lock.unlock();
     }
 
 }
