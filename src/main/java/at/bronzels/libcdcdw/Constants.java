@@ -20,4 +20,6 @@ public interface Constants {
     String defaultTimestampFormatStr = "yyyy-MM-dd HH:mm:ss";
     String defaultTimestampFormatMSStr = "yyyy-MM-dd HH:mm:ss.SSS";
 
+    Long msPrcOffset = 8 * 60 * 60 * 1000L;
+
 }
