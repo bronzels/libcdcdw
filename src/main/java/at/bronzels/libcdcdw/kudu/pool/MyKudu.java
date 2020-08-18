@@ -286,11 +286,11 @@ public class MyKudu implements Serializable {
             columnList.add(newcolumn);
             myrow.setRows(columnList);
             try {
-                distLock.acquire();
-                //distLock.acquire(colName);
+                //distLock.acquire();
+                distLock.acquire(colName);
                 AlterTableResponse alterTableResponse = agent.alterColumn(kuduClient, myrow);
-                distLock.release();
-                //distLock.release(colName);
+                //distLock.release();
+                distLock.release(colName);
             } catch (Exception e) {
                 e.printStackTrace();
                 LOG.error("kudu执行表alter操作失败，失败信息:cause-->{},message-->{}, name:{}, type:{}", e.getCause(), e.getMessage(), entry.getKey(), entry.getValue());
