@@ -1,5 +1,6 @@
 package at.bronzels.libcdcdw;
 
+import at.bronzels.libcdcdw.myenum.AppModeEnum;
 import org.apache.commons.cli.*;
 
 import java.util.ArrayList;
@@ -8,6 +9,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class CommonCli {
+    AppModeEnum appModeEnum = null;
+
     public CommandLine getCommandLine(Options options, String[] args) {
         CommandLineParser parser = new DefaultParser();
         CommandLine comm;
@@ -35,11 +38,21 @@ public class CommonCli {
         option = new Option("h", "help", false, "list commandline usage of this app");
         options.addOption(option);
 
+        option = new Option("am", "app mode", true, "yarn local/remote/submit mode for spark/flink etc");
+        options.addOption(option);
+
         return options;
     }
 
     public boolean parseIsHelp(Options options, String[] args) {
         CommandLine comm = getCommandLine(options, args);
+
+        if (comm.hasOption("am")) {
+            String appMode = comm.getOptionValue("am");
+            if(appMode != null) {
+                appModeEnum = AppModeEnum.fromName(appMode);
+            }
+        }
 
         if (comm.hasOption("h")) {
             HelpFormatter hf = new HelpFormatter();
