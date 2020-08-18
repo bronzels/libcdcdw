@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class CommonCli {
-    AppModeEnum appModeEnum = null;
+    public AppModeEnum appModeEnum = null;
 
     public CommandLine getCommandLine(Options options, String[] args) {
         CommandLineParser parser = new DefaultParser();
